@@ -50,6 +50,7 @@ export default class Product extends Component {
         this.nextPage = this.nextPage.bind(this)
         this.countProduct = this.countProduct.bind(this)
         this.onDismiss = this.onDismiss.bind(this);
+        this.handleAlert = this.handleAlert.bind(this);
     }
 
     componentDidMount() {
@@ -458,7 +459,15 @@ export default class Product extends Component {
 
 
     }
-
+    handleAlert(load, visible, msg, color) {
+        console.log("executed")
+        this.setState({
+            loading: load,
+            onSuccess: visible,
+            successMsg: msg,
+            alertColor: color
+        })
+    }
     render() {
         const category = this.state.category.map((data, idx) =>
             <option value={data.categoryId}>{data.categoryName}</option>
@@ -549,10 +558,10 @@ export default class Product extends Component {
                     </div>
                     <div className="row mt-5">
                         <div className="col-sm-4">
-                            <Category category={this.state.category}></Category>
+                            <Category handleAlert={this.handleAlert} onDismiss={this.onDismiss} category={this.state.category}></Category>
                         </div>
                         <div className="col-sm-4">
-                            <Size size={this.state.size}></Size>
+                            <Size handleAlert={this.handleAlert} onDismiss={this.onDismiss} size={this.state.size}></Size>
                         </div>
                         <div className="col-sm-4">
 

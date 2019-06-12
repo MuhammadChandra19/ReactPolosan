@@ -247,7 +247,12 @@ export default class Home extends Component {
             const current = list[i];
             if (current.value === "" || current.value === null || current.value === undefined) {
                 const textInside = current.getAttribute("name");
-                alert(textInside);
+                this.setState({
+                    loading: "none",
+                    alertColor: "danger",
+                    onSuccess: !this.state.onSuccess,
+                    successMsg: textInside
+                })
                 return false;
 
             }
@@ -256,6 +261,7 @@ export default class Home extends Component {
     }
     processTransaction() {
         if (this.state.detailProduct.length && this.state.detailProduct.length > 0) {
+
             if (this.checkValidationForm()) {
                 this.setState({
                     // dataProduct: this.state.dataProduct.concat(res.data),
@@ -264,6 +270,7 @@ export default class Home extends Component {
                 const obj = {}
                 obj.admin = "ope";
                 obj.dataTrans = this.state.detailProduct;
+                obj.transDate = new Date(document.getElementById("transactiondate").value).toISOString();
 
                 fetch(env.url + "transaction", {
                     method: "POST",
@@ -292,6 +299,7 @@ export default class Home extends Component {
                                 loading: "none",
                                 formAppend: [],
                                 onSuccess: !this.state.onSuccess,
+                                alertColor: "primary",
                                 successMsg: "Transaksi berhasil dengan total pembayaran " + res.data.totalPriceSells
                             })
                             // window.location.href = "/product"
@@ -319,27 +327,27 @@ export default class Home extends Component {
         const dataAppend = this.state.formAppend.map(dt =>
             <div key={dt} className="row mb-2" id={`${dt}rm`}>
                 <p className="dp-none" id={dt}></p>
-                <div className="col-sm-5">
+                <div className="col-sm-5 mb-2">
                     <select id={`${dt}Nm`} onChange={() => this.appendSize(`${dt}Nm`, `${dt}Sz`, `${dt}Qty`, `${dt}Prc`, dt)} className="form-control">
                         <option value="" >Pilih Produk</option>
                         {dropDownProduct}
                     </select>
                 </div>
-                <div className="col-sm-2">
+                <div className="col-sm-2 mb-2">
 
                     <select id={`${dt}Sz`} onChange={() => this.setMaxQty(`${dt}Nm`, `${dt}Sz`, `${dt}Qty`, dt)} className="form-control data-typed">
                         <option value=""  >Pilih Size</option>
 
                     </select>
                 </div>
-                <div className="col-sm-2">
+                <div className="col-sm-2 mb-2">
                     <input type="number" className="form-control data-typed" onChange={(evt) => this.checkMax(evt, `${dt}Nm`)} id={`${dt}Qty`} min="1" placeholder="Qty"></input>
 
                 </div>
-                <div className="col-sm-2">
+                <div className="col-sm-2 mb-2">
                     <input type="number" className="form-control data-typed" id={`${dt}Prc`} onChange={(evt) => this.addSoldPrice(evt, `${dt}Nm`)} placeholder="Harga"></input>
                 </div>
-                <div className="col-sm-1">
+                <div className="col-sm-1 mb-2">
                     <button type="button" onClick={() => this.formPrepend(dt, `${dt}Nm`)} className="btn btn-danger" > <i className="fa fa-trash"></i></button>
 
                 </div>
@@ -354,18 +362,31 @@ export default class Home extends Component {
                         {this.state.successMsg}
                     </Alert>
                     <div className="card mb-3">
-                        <div className="card-header text-white bg-dark"><i className="fa fa-calculator"></i></div>
+                        <div className="card-header text-white bg-dark">
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    <i className="fa fa-calculator"></i>
+                                </div>
+                                <div className="col-sm-6 hidden-xs"></div>
+                                <div className="col-sm-3 float-right">
+                                    <input type="date" id="transactiondate" name="Tanggal transaksi harus di isi" className="form-control data-typed required-input"></input>
+                                </div>
+                            </div>
+
+
+
+                        </div>
                         <div className="container">
                             <div className="mb-2 mt-2">
                                 {dataAppend}
                             </div>
                             <div className="row">
-                                <div className="col-sm-3">
+                                <div className="col-md-3 col-sm-12 col-xs-6">
                                     <button type="button" onClick={this.pushAppendChart} className="btn btn-primary mb-3 mt-3" > <i className="fa fa-plus-circle"></i> Tambah Cart</button>
 
                                 </div>
-                                <div className="col-sm-6"></div>
-                                <div className="col-sm-3">
+                                <div className="col-md-6 hidden-xs"></div>
+                                <div className="col-md-3 col-sm-12 col-xs-6">
                                     <button type="button" onClick={this.processTransaction} className="btn btn-primary mb-3 mt-3 float-right" > <i className="fa fa-credit-card"></i> Proses</button>
 
                                 </div>

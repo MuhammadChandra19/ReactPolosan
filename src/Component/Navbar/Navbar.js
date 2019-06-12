@@ -25,13 +25,7 @@ export default class Navbar extends Component {
                 active: "",
                 className: "nav-item active"
             }
-                ,
-            {
-                href: "/",
-                title: "Audit",
-                active: "",
-                className: "nav-item active"
-            }
+
             ]
 
 
